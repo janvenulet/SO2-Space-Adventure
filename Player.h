@@ -1,5 +1,5 @@
 #include "Spaceship.h"
-
+#include "Bullet.h"
 
 class Player : public Spacesphip
 {
@@ -7,7 +7,7 @@ class Player : public Spacesphip
 
     public:
         void draw();
-
+        Bullet * shoot();
         
 
         Player(int, int, int, int);

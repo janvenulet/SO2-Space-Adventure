@@ -6,6 +6,7 @@
 #include <thread>
 //#include "Enemy.h"
 #include "Player.h"
+#include "Bullet.h"
 
 
 
@@ -17,7 +18,12 @@ bool runningLoop = true;
 int windowX, windowY;
 int mutexX = windowX/4;
 int mutexY = windowY/2;
-//std::vector <Enemy> enemies;	
+
+std::vector <std::thread> bulletsThreads;
+std::vector <std::thread> enemiesThreads;
+
+//std::vector <Enemy> enemies;
+std::vector <Bullet *> bullets;	
 Player * player;
 
 void renderScreen()
@@ -27,10 +33,10 @@ void renderScreen()
 		clear();
         player->draw();
 
-		// for (int i = 0; i < enemies.size(); i++)
-		// {
-		// 	mvprintw(balls[i]->getY(), balls[i]->getX(), "o");	
-		// }
+		for (int i = 0; i < bullets.size(); i++)
+		{
+			mvprintw(bullets[i]->getY(), bullets[i]->getX(), "o");	
+	     }
 		refresh();
 		std::this_thread::sleep_for(std::chrono::milliseconds(30));
 	}
@@ -48,7 +54,7 @@ void keyboardHandling()
         if (key == 100)
             player->move(1,0);
         if (key == 32)
-            
+            bullets.push_back(player->shoot());
     }
 }
 

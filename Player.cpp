@@ -26,6 +26,13 @@ void Player::draw()
     mvprintw(this->Y_pos - 1, this->X_pos + this->width/2, "\\");
 }
 
+Bullet * Player::shoot()
+{
+    Bullet * bullet = new Bullet(this->Y_pos - 2, this->X_pos + this->width/2);
+
+    return bullet;
+}
+
 Player::~Player()
  {
 
