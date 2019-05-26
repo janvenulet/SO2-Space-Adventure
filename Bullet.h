@@ -6,6 +6,8 @@ class Bullet
         int Y; 
         double speedX;
         double speedY;
+        bool missed;
+
     public:
         Bullet(int,int);
         ~Bullet();
@@ -13,4 +15,6 @@ class Bullet
         void bounce();
         int getX();
         int getY();
+        bool hitWall();
+        bool getMissed();
 };

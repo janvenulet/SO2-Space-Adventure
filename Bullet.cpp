@@ -14,10 +14,18 @@ Bullet::Bullet(int x, int y)
     this->X = x;
     this->Y = y;
     int tmp = 0;
-    tmp = rand() % 9 - 5;
-    this->speedX = tmp;
-    tmp = rand() % 10 - 12;
-    this->speedY = tmp;
+    //tmp = rand() % 9 - 5;
+    //this->speedX = tmp;
+    //tmp = rand() % 2 - 3;
+    this->speedY = -1;
+    this->missed = false;
+}
+
+bool Bullet::hitWall()
+{
+    int screenY = getmaxy(stdscr);
+    bool missed = ( (this->Y < 0 || this->Y > screenY) ? true : false);
+    return missed;
 }
 
 
@@ -46,20 +54,21 @@ void Bullet::move()
         this->X += speedX; 
     }
 
-    if (this->Y <= 0 )
+    if (this->Y  <= 0 )
     {
-        if (this->Y + speedY == 0) 
+        if (this->Y == 0) 
                 this->Y=0;
-        else 
-                this->Y = abs(this->Y + speedY); // speed higher than discance
+        //else 
+                //this->Y = abs(this->Y + speedY); // speed higher than discance
         speedY *= -1;
     }
-    else if ( this->Y == screenY) //surface friction
-    {
-        speedX *= 0.8;
-        if (abs(speedX) < 0.4)
-                speedX = 0.0;
-    }
+
+    // else if ( this->Y == screenY) //surface friction
+    // {
+    //     speedX *= 0.8;
+    //     if (abs(speedX) < 0.4)
+    //             speedX = 0.0;
+    // }
 
     if (this -> Y  > screenY - 1 ) 
     {
@@ -88,10 +97,10 @@ void Bullet::move()
     //             this->Y= screenY - abs(screenY - (this->Y + speedY));
     //     speedY *= -1; 
     // }
-    // else 
-    // {
-    //     this->Y += speedY;
-    // }
+    else 
+    {
+        this->Y += speedY;
+    }
     return;
 }
 
@@ -103,6 +112,11 @@ int Bullet::getX()
 int Bullet::getY()
 {
     return this->Y;
+}
+
+bool Bullet::getMissed()
+{
+    return this->missed;
 }
 
 Bullet::~Bullet()

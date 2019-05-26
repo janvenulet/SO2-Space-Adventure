@@ -28,7 +28,7 @@ void Player::draw()
 
 Bullet * Player::shoot()
 {
-    Bullet * bullet = new Bullet(this->Y_pos - 2, this->X_pos + this->width/2);
+    Bullet * bullet = new Bullet(this->X_pos + this->width/2, this->Y_pos - 2);
 
     return bullet;
 }

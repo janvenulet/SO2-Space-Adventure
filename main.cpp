@@ -35,15 +35,30 @@ void renderScreen()
 
 		for (int i = 0; i < bullets.size(); i++)
 		{
-			mvprintw(bullets[i]->getY(), bullets[i]->getX(), "o");	
-	     }
+			if (bullets[i]->getMissed()) continue; 
+            mvprintw(bullets[i]->getY(), bullets[i]->getX(), "o");	
+	    }
 		refresh();
 		std::this_thread::sleep_for(std::chrono::milliseconds(30));
 	}
 }
 
+
+void bulletThreadFunction(int bulletId)
+{
+    bool collision = false;
+    while (runningLoop || collision)
+    {
+        if (bullets[bulletId]->hitWall()) break;
+        //enemies.hit(bullet); warunek czy trafilo
+		bullets[bulletId]->move();
+        std::this_thread::sleep_for(std::chrono::milliseconds(30));
+    }
+}
+
 void keyboardHandling()
 {
+    int bulletId = 0;
     while (runningLoop)
     {
 		char key = getchar();
@@ -54,9 +69,16 @@ void keyboardHandling()
         if (key == 100)
             player->move(1,0);
         if (key == 32)
+        {
             bullets.push_back(player->shoot());
+            bulletsThreads.push_back(std::thread(bulletThreadFunction, bulletId));
+            bulletId++; 
+        }
+
+
     }
 }
+
 
 
 
@@ -82,6 +104,11 @@ int main(int argc, char const * argv [])
 
     renderScreeenThread.join();
     keyboardHandlingThread.join();
+
+    for (int i = 0; i < bulletsThreads.size(); i++)
+    {
+        bulletsThreads[i].join();
+    }
 
     endwin();
     return 0; 
