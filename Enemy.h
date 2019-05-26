@@ -1,10 +1,18 @@
 #include "Spaceship.h"
 
-class Enemy : Spacesphip
+class Enemy : public Spaceship 
 {
-    public:
-
     private:
-        int groupID; 
+        int groupId;
+        int healthPoints;
+
+    public:
+        int getGroupId();
+        void draw(); 
+
+        
+        Enemy(int, int, int, int);
+        Enemy();
+        ~Enemy();
 
 };

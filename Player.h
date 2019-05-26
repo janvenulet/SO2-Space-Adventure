@@ -1,7 +1,7 @@
 #include "Spaceship.h"
 #include "Bullet.h"
 
-class Player : public Spacesphip
+class Player : public Spaceship
 {
     private: 
 

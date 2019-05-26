@@ -17,4 +17,5 @@ class Bullet
         int getY();
         bool hitWall();
         bool getMissed();
+        void setMissed(bool);
 };

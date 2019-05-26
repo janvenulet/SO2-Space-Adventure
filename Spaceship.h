@@ -1,5 +1,7 @@
 #pragma once
-class Spacesphip 
+#include "ncurses.h"
+
+class Spaceship 
 {
     protected:
         int height; 
@@ -17,8 +19,17 @@ class Spacesphip
         
         void move(int shiftX, int shiftY)
         {
-            X_pos += shiftX;
+            int screenX = getmaxx(stdscr);
+            int tmp = X_pos + shiftX;
+            if (! (tmp < 0 || tmp > screenX)) 
+                X_pos += shiftX;
             Y_pos += shiftY;
         }
+
+        bool pointInside(int x, int y) 
+        {
+            return ( ( x >= X_pos && x <= X_pos + width) && ( y >= Y_pos && y <= Y_pos + height) );
+        }
+
 
 };

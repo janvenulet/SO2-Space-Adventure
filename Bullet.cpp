@@ -24,7 +24,8 @@ Bullet::Bullet(int x, int y)
 bool Bullet::hitWall()
 {
     int screenY = getmaxy(stdscr);
-    bool missed = ( (this->Y < 0 || this->Y > screenY) ? true : false);
+    bool missed = ( (this->Y < 0 || this->Y >= screenY - 1) ? true : false);
+    this->missed = missed;
     return missed;
 }
 
@@ -54,11 +55,11 @@ void Bullet::move()
         this->X += speedX; 
     }
 
-    if (this->Y  <= 0 )
+    if (this->Y == 0 )
     {
         if (this->Y == 0) 
-                this->Y=0;
-        //else 
+            this->Y=0;
+        //else
                 //this->Y = abs(this->Y + speedY); // speed higher than discance
         speedY *= -1;
     }
@@ -117,6 +118,11 @@ int Bullet::getY()
 bool Bullet::getMissed()
 {
     return this->missed;
+}
+
+void Bullet::setMissed(bool val)
+{
+    this->missed = val;
 }
 
 Bullet::~Bullet()

@@ -4,17 +4,14 @@
 #include <time.h>
 #include <stdlib.h>
 #include <thread>
-//#include "Enemy.h"
 #include "Player.h"
 #include "Bullet.h"
+#include "Enemy.h"
 
 
-
-//#define KEY_LEFT 75
-//#define KEY_RIGHT 77
-
-
-bool runningLoop = true; 
+int timeInterval = 5;
+bool runningLoop = true;
+int numberOfEnemies = 1; 
 int windowX, windowY;
 int mutexX = windowX/4;
 int mutexY = windowY/2;
@@ -22,7 +19,7 @@ int mutexY = windowY/2;
 std::vector <std::thread> bulletsThreads;
 std::vector <std::thread> enemiesThreads;
 
-//std::vector <Enemy> enemies;
+std::vector <Enemy *> enemies;
 std::vector <Bullet *> bullets;	
 Player * player;
 
@@ -38,8 +35,13 @@ void renderScreen()
 			if (bullets[i]->getMissed()) continue; 
             mvprintw(bullets[i]->getY(), bullets[i]->getX(), "o");	
 	    }
+
+		for (int i = 0; i < enemies.size(); i++)
+		{
+			enemies[i]->draw();
+	    }
 		refresh();
-		std::this_thread::sleep_for(std::chrono::milliseconds(30));
+		std::this_thread::sleep_for(std::chrono::milliseconds(25));
 	}
 }
 
@@ -47,12 +49,21 @@ void renderScreen()
 void bulletThreadFunction(int bulletId)
 {
     bool collision = false;
-    while (runningLoop || collision)
+    while (runningLoop && !collision)
     {
         if (bullets[bulletId]->hitWall()) break;
         //enemies.hit(bullet); warunek czy trafilo
-		bullets[bulletId]->move();
-        std::this_thread::sleep_for(std::chrono::milliseconds(30));
+		for (int i = 0; i < enemies.size(); i++)
+		{
+			if (enemies[i]->pointInside(bullets[bulletId]->getX(), bullets[bulletId]->getY()))
+            {
+                bullets[bulletId]->setMissed(true);
+                collision= true;
+            }
+	    }
+        
+        bullets[bulletId]->move();
+        std::this_thread::sleep_for(std::chrono::milliseconds(70));
     }
 }
 
@@ -75,12 +86,26 @@ void keyboardHandling()
             bulletId++; 
         }
 
-
     }
 }
 
+void enemyThreadFunction()
+{
+    //movement of enemy
+}
 
-
+void generateEnemies()
+{
+    getmaxyx(stdscr, windowY, windowX);
+	for (int i = 0 ; i < numberOfEnemies; i++) 
+	{
+		enemies.push_back(new Enemy(6, 3, windowX/2, windowY/3));
+        //enemies.push_back(new Enemy());
+		//enemiesThreads.push_back(std::thread(enemyThreadFunction, i));
+		if (!runningLoop) break;
+		//    std::this_thread::sleep_for(std::chrono::milliseconds(timeInterval));
+	}
+}
 
 int main(int argc, char const * argv [])
 {
@@ -96,18 +121,20 @@ int main(int argc, char const * argv [])
     
     std::thread renderScreeenThread(renderScreen);
     std::thread keyboardHandlingThread(keyboardHandling);
-
-    // getmaxyx(stdscr, windowY, windowX);	
-	// int mutexX = windowX/4;
-	// int mutexY = windowY/2;
-	// mvaddstr(mutexY, mutexX, "__________");
+    std::thread generateEnemiesThread(generateEnemies);
 
     renderScreeenThread.join();
     keyboardHandlingThread.join();
+    generateEnemiesThread.join();
 
     for (int i = 0; i < bulletsThreads.size(); i++)
     {
         bulletsThreads[i].join();
+    }
+
+    for (int i = 0; i < enemiesThreads.size(); i++)
+    {
+        enemiesThreads[i].join();
     }
 
     endwin();
