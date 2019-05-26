@@ -9,10 +9,7 @@ Enemy::Enemy(int width, int height, int x_pos, int y_pos)
     this->groupId = 1;
 }
 
-Enemy::Enemy()
-{
 
-}
 
 void Enemy::draw()  
 {   

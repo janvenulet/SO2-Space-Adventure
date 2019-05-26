@@ -8,6 +8,7 @@ class Spaceship
         int width;
         int X_pos;
         int Y_pos;
+        int healthPoints = 3; //ile razy musi zostac ustrzelony
         
     public:
         //void virtual draw(int, int);
@@ -42,5 +43,14 @@ class Spaceship
             return ( ( x >= X_pos && x <= X_pos + width) && ( y >= Y_pos && y <= Y_pos + height) );
         }
 
+        int getHealthPoint()
+        {
+            return healthPoints;
+        }
+
+        void gotShot() //zmniejsza hp
+        {
+            healthPoints -= 1; 
+        } 
 
 };
