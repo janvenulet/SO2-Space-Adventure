@@ -12,10 +12,21 @@ class Spaceship
     public:
         //void virtual draw(int, int);
         //void virtual draw();
-        int getX();
-        int getY();
+        int getX() 
+        {
+            return X_pos;
+        }
+
+        int getY() 
+        {
+            return Y_pos;
+        }
+
         int getHeight();
-        int getWidth();
+        int getWidth()
+        {
+            return width;
+        };
         
         void move(int shiftX, int shiftY)
         {
