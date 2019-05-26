@@ -1,35 +1,38 @@
-#include<ncurses.h>
+#include <ncurses.h>
 #include <vector>
 #include <iostream>
 #include <time.h>
 #include <stdlib.h>
 #include <thread>
-#include "Enemy.h"
+//#include "Enemy.h"
 #include "Player.h"
 
 
 
-#define KEY_LEFT 75
-#define KEY_RIGHT 77
+//#define KEY_LEFT 75
+//#define KEY_RIGHT 77
 
 
-bool runningLoop;
+bool runningLoop = true; 
 int windowX, windowY;
-std::vector <Enemy> enemies;
-Player player; 
+int mutexX = windowX/4;
+int mutexY = windowY/2;
+//std::vector <Enemy> enemies;	
+Player * player;
 
 void renderScreen()
 {
 	while (runningLoop)
 	{
 		clear();
-        player.draw();
+        player->draw();
+
 		// for (int i = 0; i < enemies.size(); i++)
 		// {
 		// 	mvprintw(balls[i]->getY(), balls[i]->getX(), "o");	
 		// }
 		refresh();
-		std::this_thread::sleep_for(std::chrono::milliseconds(25));
+		std::this_thread::sleep_for(std::chrono::milliseconds(30));
 	}
 }
 
@@ -37,13 +40,15 @@ void keyboardHandling()
 {
     while (runningLoop)
     {
-		char key = getch();
-		if (key == '\n')
+		char key = getchar();
+		if (key == 13)
 	    	runningLoop = false;
-        if (key == KEY_LEFT)
-            player.move(-1,0);
-        if (key == KEY_RIGHT)
-            player.move(1,0);
+        if (key == 97)
+            player->move(-1,0);
+        if (key == 100)
+            player->move(1,0);
+        if (key == 32)
+            
     }
 }
 
@@ -55,12 +60,23 @@ int main(int argc, char const * argv [])
 	initscr();
 	curs_set(0);
 
+    getmaxyx(stdscr, windowY, windowX);
+    mutexX = windowX/2.5;
+    mutexY = windowY/1.05;
+    
+    player = new Player(10,2, mutexX, mutexY); 
+    
     std::thread renderScreeenThread(renderScreen);
     std::thread keyboardHandlingThread(keyboardHandling);
+
+    // getmaxyx(stdscr, windowY, windowX);	
+	// int mutexX = windowX/4;
+	// int mutexY = windowY/2;
+	// mvaddstr(mutexY, mutexX, "__________");
 
     renderScreeenThread.join();
     keyboardHandlingThread.join();
 
-
+    endwin();
     return 0; 
 }

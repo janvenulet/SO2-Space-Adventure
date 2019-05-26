@@ -1,4 +1,4 @@
-
+#pragma once
 class Spacesphip 
 {
     protected:
@@ -6,9 +6,10 @@ class Spacesphip
         int width;
         int X_pos;
         int Y_pos;
-    public:
-        void virtual draw();
         
+    public:
+        //void virtual draw(int, int);
+        //void virtual draw();
         int getX();
         int getY();
         int getHeight();

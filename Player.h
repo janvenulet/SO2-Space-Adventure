@@ -1,18 +1,16 @@
 #include "Spaceship.h"
 
+
 class Player : public Spacesphip
 {
-    public:
-
     private: 
-        void draw() override 
-        {
 
-        }
+    public:
+        void draw();
 
-        Player()
-        {
-            
-        }
+        
+
+        Player(int, int, int, int);
+       
         ~Player();
 };
